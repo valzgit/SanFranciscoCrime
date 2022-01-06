@@ -3,22 +3,36 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 
 class DataEncoder:
-    categoryNamesArray = []
+    categoryNamesArray = ['ARSON', 'ASSAULT', 'BAD CHECKS', 'BRIBERY', 'BURGLARY', 'DISORDERLY CONDUCT',
+                          'DRIVING UNDER THE INFLUENCE', 'DRUG/NARCOTIC', 'DRUNKENNESS', 'EMBEZZLEMENT', 'EXTORTION',
+                          'FAMILY OFFENSES', 'FORGERY/COUNTERFEITING', 'FRAUD', 'GAMBLING', 'KIDNAPPING',
+                          'LARCENY/THEFT', 'LIQUOR LAWS', 'LOITERING', 'MISSING PERSON', 'NON-CRIMINAL',
+                          'OTHER OFFENSES', 'PORNOGRAPHY/OBSCENE MAT', 'PROSTITUTION', 'RECOVERED VEHICLE', 'ROBBERY',
+                          'RUNAWAY', 'SECONDARY CODES', 'SEX OFFENSES FORCIBLE', 'SEX OFFENSES NON FORCIBLE',
+                          'STOLEN PROPERTY', 'SUICIDE', 'SUSPICIOUS OCC', 'TREA', 'TRESPASS', 'VANDALISM',
+                          'VEHICLE THEFT', 'WARRANTS', 'WEAPON LAWS']
 
     @staticmethod
-    def getEncodedCategories(data):
-        print("Fetching encoded categories...")
+    def convertToHotEncodedCategories(data):
+        print("Converting encoded categories...")
         ohe = OneHotEncoder(dtype=int, sparse=False)
-        category = ohe.fit_transform(data.Category.to_numpy().reshape(-1, 1))
-        data.drop(columns=['Category'], inplace=True)
-        DataEncoder.categoryNamesArray = ohe.get_feature_names_out(['Category'])
         i = 0
         while i < len(DataEncoder.categoryNamesArray):
-            DataEncoder.categoryNamesArray[i] = DataEncoder.categoryNamesArray[i].replace('Category_', '')
+            data = data.append({'Category': DataEncoder.categoryNamesArray[i]}, ignore_index=True)
             i += 1
+        print(data)
+        category = ohe.fit_transform(data.Category.to_numpy().reshape(-1, 1))
+        data.drop(columns=['Category'], inplace=True)
         dataFrame = pd.DataFrame(data=category, columns=DataEncoder.categoryNamesArray)
         dataFrame.dropna(inplace=True)
-        print("Fetched encoded categories!")
+        dataFrame.drop(dataFrame.tail(39).index, inplace=True)
+        print("Converted encoded categories!")
+        return dataFrame
+
+    @staticmethod
+    def fetchCategoriesAndClassifyThem(data):
+        dataFrame = data['Category'].copy()
+        data.drop(columns=['Category'], inplace=True)
         return dataFrame
 
     @staticmethod

@@ -17,7 +17,7 @@ DataSeparator.dropUselessColumns(trainData)
 DataSeparator.separateDate(testData)
 DataSeparator.extractAddressInfo(testData)
 
-trainCategory = DataEncoder.getEncodedCategories(trainData)
+trainCategory = DataEncoder.fetchCategoriesAndClassifyThem(trainData)
 trainData = DataEncoder.hotEncodeDistrict(trainData)
 trainCategory.drop(trainCategory.tail(875726 - 873412).index, inplace=True)
 
@@ -30,6 +30,6 @@ print('Success!')
 CSVConverter.TrainAndTestToCSVFiles(trainData, testData)
 
 solution = ModelTraining.decideTrainingPath(trainData, trainCategory, testData)
-CSVConverter.toCSVFile(solution)
+CSVConverter.toCSVFile(DataEncoder.convertToHotEncodedCategories(solution))
 
 # print('Model score: ', dtc_model.score(testData, resultData))
