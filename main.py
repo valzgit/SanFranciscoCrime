@@ -17,7 +17,7 @@ DataSeparator.dropUselessColumns(trainData)
 DataSeparator.separateDate(testData)
 DataSeparator.extractAddressInfo(testData)
 
-trainCategory = DataEncoder.fetchCategoriesAndClassifyThem(trainData)
+trainCategory = DataEncoder.labelEncodeCategories(DataEncoder.fetchCategoriesAndClassifyThem(trainData))
 trainData = DataEncoder.hotEncodeDistrict(trainData)
 trainCategory.drop(trainCategory.tail(875726 - 873412).index, inplace=True)
 
@@ -27,9 +27,7 @@ print('Dropping Id columns from Test and Result tables...')
 testData.drop(columns=['Id'], inplace=True)
 print('Success!')
 
-CSVConverter.TrainAndTestToCSVFiles(trainData, testData)
+# CSVConverter.TrainAndTestToCSVFiles(trainData, testData)
 
 solution = ModelTraining.decideTrainingPath(trainData, trainCategory, testData)
-CSVConverter.toCSVFile(DataEncoder.convertToHotEncodedCategories(solution))
-
-# print('Model score: ', dtc_model.score(testData, resultData))
+CSVConverter.toCSVFile(DataEncoder.convertToHotEncodedCategories(DataEncoder.labelDecodeCategories(solution)))

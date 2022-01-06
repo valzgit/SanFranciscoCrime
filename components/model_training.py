@@ -2,12 +2,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 import pandas as pd
+import numpy as np
 from algorithm_picker import Algorithm
-from components.data_encoder import DataEncoder
 
 
 class ModelTraining:
-    currentAlg = Algorithm.RandomForestClassifier
+    currentAlg = Algorithm.DecisionTreeClassifier
 
     @staticmethod
     def decideTrainingPath(trainData, trainCategory, testData):
@@ -19,9 +19,10 @@ class ModelTraining:
             return ModelTraining.trainingWithKNNAlgorithm(trainData, trainCategory, testData)
 
     @staticmethod
-    def trainWithDecisionTreeClassifier(trainData, trainCategory, testData):  # Score: 26.94747
+    def trainWithDecisionTreeClassifier(trainData, trainCategory, testData):  # Score: 24.82348
         print('Started training model using DecisionTreeClassifier...')
         dtc_model = DecisionTreeClassifier(criterion='entropy')
+        trainCategory = np.ravel(trainCategory)
         dtc_model.fit(trainData, trainCategory)
         print('Finished with model training!')
         print('Prediction has started...')
@@ -30,17 +31,11 @@ class ModelTraining:
         return dataFrame
 
     @staticmethod
-    def trainingWithRandomForestClassifier(trainData, trainCategory, testData):  # Score[40]: 4.31084
+    def trainingWithRandomForestClassifier(trainData, trainCategory,
+                                           testData):  # Score[40]: 4.31084 //MUCH WORSE WITH LABELENCODING
         print('Started training model using RandomForestClassifier...')
-        rfc = RandomForestClassifier(n_estimators=550,
-                                     max_depth=31,
-                                     max_features='sqrt',
-                                     min_samples_leaf=16,
-                                     min_samples_split=43,
-                                     random_state=1,
-                                     verbose=1,
-                                     n_jobs=4)
-        rfc.n_classes_ = 39
+        rfc = RandomForestClassifier(n_estimators=80, verbose=1, n_jobs=4)
+        trainCategory = np.ravel(trainCategory)
         rfc.fit(trainData, trainCategory)
         print('Finished with model training!')
         print('Prediction has started...')
@@ -49,9 +44,10 @@ class ModelTraining:
         return dataFrame
 
     @staticmethod
-    def trainingWithKNNAlgorithm(trainData, trainCategory, testData):
+    def trainingWithKNNAlgorithm(trainData, trainCategory, testData):  # lasts forever
         print('Started training model using KNN...')
-        knn = KNeighborsClassifier(n_neighbors=1, n_jobs=4)
+        knn = KNeighborsClassifier(n_neighbors=3, n_jobs=4)
+        trainCategory = np.ravel(trainCategory)
         knn.fit(trainData, trainCategory)
         print('Finished with model training!')
         print('Prediction has started...')

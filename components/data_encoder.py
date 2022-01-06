@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 
@@ -20,7 +21,6 @@ class DataEncoder:
         while i < len(DataEncoder.categoryNamesArray):
             data = data.append({'Category': DataEncoder.categoryNamesArray[i]}, ignore_index=True)
             i += 1
-        print(data)
         category = ohe.fit_transform(data.Category.to_numpy().reshape(-1, 1))
         data.drop(columns=['Category'], inplace=True)
         dataFrame = pd.DataFrame(data=category, columns=DataEncoder.categoryNamesArray)
@@ -54,4 +54,21 @@ class DataEncoder:
         data.dropna(inplace=True)
         print("Hot encoded districts!")
         return data
-        # trainCategory.drop(trainCategory.tail(875726 - 873412).index, inplace=True)
+
+    le = LabelEncoder()
+
+    @staticmethod
+    def labelEncodeCategories(data):
+        print("Label encoding categories...")
+        encodedData = DataEncoder.le.fit_transform(data)
+        print("Label encoded categories!")
+        return pd.DataFrame(data=encodedData, columns=['Category'])
+
+    @staticmethod
+    def labelDecodeCategories(data):
+        print("Label decoding categories...")
+        data = np.ravel(data.to_numpy())
+        print(data)
+        inverseData = DataEncoder.le.inverse_transform(data)
+        print("Label decoded categories!")
+        return pd.DataFrame(data=inverseData, columns=['Category'])
