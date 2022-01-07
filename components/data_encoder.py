@@ -14,22 +14,6 @@ class DataEncoder:
                           'VEHICLE THEFT', 'WARRANTS', 'WEAPON LAWS']
 
     @staticmethod
-    def convertToHotEncodedCategories(data):
-        print("Converting encoded categories...")
-        ohe = OneHotEncoder(dtype=int, sparse=False)
-        i = 0
-        while i < len(DataEncoder.categoryNamesArray):
-            data = data.append({'Category': DataEncoder.categoryNamesArray[i]}, ignore_index=True)
-            i += 1
-        category = ohe.fit_transform(data.Category.to_numpy().reshape(-1, 1))
-        data.drop(columns=['Category'], inplace=True)
-        dataFrame = pd.DataFrame(data=category, columns=DataEncoder.categoryNamesArray)
-        dataFrame.dropna(inplace=True)
-        dataFrame.drop(dataFrame.tail(39).index, inplace=True)
-        print("Converted encoded categories!")
-        return dataFrame
-
-    @staticmethod
     def fetchCategoriesAndClassifyThem(data):
         dataFrame = data['Category'].copy()
         data.drop(columns=['Category'], inplace=True)
