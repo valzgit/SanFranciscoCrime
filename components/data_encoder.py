@@ -36,13 +36,13 @@ class DataEncoder:
         return dataFrame
 
     @staticmethod
-    def labelEncodeDistrict(dataTrain, dadaTest):
+    def labelEncodeDistrict(dataTrain, dataTest):
         print("Hot encoding districts...")
         le = LabelEncoder()
         dataTrain['PdDistrict'] = le.fit_transform(dataTrain['PdDistrict'])
-        dadaTest['PdDistrict'] = le.transform(dadaTest['PdDistrict'])
+        dataTest['PdDistrict'] = le.transform(dataTest['PdDistrict'])
         print("Hot encoded districts!")
-        return dataTrain, dadaTest
+        return dataTrain, dataTest
 
     @staticmethod
     def hotEncodeDistrict(data):

@@ -33,4 +33,6 @@ class CSVConverter:
             data.to_csv('export_tables/solutionDTC.csv', index_label='Id')
         elif ModelTraining.currentAlg == Algorithm.KNN:
             data.to_csv('export_tables/solutionKNN.csv', index_label='Id')
+        elif ModelTraining.currentAlg == Algorithm.CatBoost:
+            data.to_csv('export_tables/solutionCAT.csv', index_label='Id')
         print('Converted Data to CSV!')

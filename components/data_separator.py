@@ -8,15 +8,11 @@ class DataSeparator:
         print('Separating dates...')
         data['Year'] = data['Dates'].dt.year
         data['Day'] = data['Dates'].dt.day
-        data['MonthX'] = numpy.sin(data['Dates'].dt.month * 2.0 * math.pi / 11.0)
-        data['MonthY'] = numpy.cos(data['Dates'].dt.month * 2.0 * math.pi / 11.0)
-        data['DayOfWeekX'] = numpy.sin(data['Dates'].dt.weekday * 2.0 * math.pi / 6.0)
-        data['DayOfWeekY'] = numpy.cos(data['Dates'].dt.weekday * 2.0 * math.pi / 6.0)
-        data['HourX'] = numpy.sin(data['Dates'].dt.hour * 2.0 * math.pi / 23.0)
-        data['HourY'] = numpy.cos(data['Dates'].dt.hour * 2.0 * math.pi / 23.0)
-        data['MinuteX'] = numpy.sin(data['Dates'].dt.minute * 2.0 * math.pi / 59.0)
-        data['MinuteY'] = numpy.cos(data['Dates'].dt.minute * 2.0 * math.pi / 59.0)
-        data.drop(columns=['Dates', 'DayOfWeek'], inplace=True)
+        data['Month'] = data['Dates'].dt.month
+        data['DayOfWeek'] = data['Dates'].dt.weekday
+        data['Hour'] = data['Dates'].dt.hour
+        data['Minute'] = data['Dates'].dt.minute
+        data.drop(columns=['Dates'], inplace=True)
         print('Separated dates!')
 
     @staticmethod
